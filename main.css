@@ -1,0 +1,27 @@
+﻿@charset "utf-8";
+
+.tableAddDel
+{
+	font-family: "Time New Roman";
+	font-size: 20px;
+	border: 2px solid #000;
+	border-radius: 10px;
+	padding: 10px;
+	margin: 5px;
+}
+
+.inc_exp
+{
+	display: inline-block;
+	padding: 5px;
+}
+
+table, th, td
+{
+	border: 1px solid black;
+	border-collapse: collapse;
+}
+table
+{
+	width: 100%;
+}
