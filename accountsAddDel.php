@@ -13,6 +13,7 @@ _END;
 	require_once 'loginDB.php';
 	require_once 'funcTableAddDel.php';
 	require_once 'funcTableShow.php';
+	require_once 'funcNameID.php';
 
 	$connection = new mysqli($dbHostname,$dbUsername,$dbPassword,$dbDatabase);
 
@@ -68,11 +69,7 @@ _END;
 		$amount = $_POST['amount'];
 		$userName = $_POST['userName'];
 
-		$query = "SELECT userID FROM users WHERE userName='$userName'";
-		$result = $connection->query($query);
-		if (!$result) "Сбой при доступе к базе данных: $query<br>" . $connection->error . "<br><br>";
-		$row = $result->fetch_array(MYSQLI_NUM);
-		$userID = $row[0];
+		$userID = nameToID($connection,'userID','users','userName',$userName);
 
 		$query = "INSERT INTO " . $table . " VALUES ('$accountName',NULL,'$currency','$amount','$userID')";
 		tableAddDel($connection,$query,$header,$cols,$table);
@@ -111,15 +108,8 @@ _END;
 				echo "<td>$row[$i]</td>";
 			}
 
-			$queryID = "SELECT userName FROM users WHERE userID=$row[$i]";
-			$resultID = $connection->query($queryID);
+			IDtoName($connection,'userName','users','userID',$row,$i);
 
-			if (!$resultID) echo "Сбой при доступе к базе данных: $queryID<br>" . $connection->error . "<br><br>";
-			$rowsID = $resultID->num_rows;
-			$userNameID = $resultID->fetch_array(MYSQLI_NUM);
-			$row[$i] = $userNameID[0];
-
-			echo "<td>$row[$i]</td>";
 			echo "</tr>";
 		}
 		echo "</table>";

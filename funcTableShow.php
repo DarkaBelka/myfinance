@@ -17,7 +17,7 @@ function tableShow($connection,$table,$header,$cols)
 		echo "<tr>";
 			for ($i = 0 ; $i < $cols ; $i++)
 			{
-				echo "<th>$row[$i]</th>";
+				echo "<td>$row[$i]</td>";
 			}
 		echo "</tr>";
 	}

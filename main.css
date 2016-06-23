@@ -25,3 +25,15 @@ table
 {
 	width: 100%;
 }
+
+.incomeValue
+{
+	color: #008000;
+	text-align: left;
+}
+
+.expendValue
+{
+	color: #f00;
+	text-align: right;
+}
