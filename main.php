@@ -44,7 +44,6 @@ _END;
 		echo "<div class='inc_exp'>";
 			echo "Перевод";
 			$query = "SELECT accountName FROM accounts";
-			selectSmth($connection,$query,'accountOut','Счет списания');
 			selectSmth($connection,$query,'accountIn','Счет зачисления');
 		echo "</div><br>";
 
@@ -69,6 +68,7 @@ _END;
 _END;
 
 	$header = " <tr>
+					<th>123</th>
 					<th>Пользователь</th>
 					<th>Счет</th>
 					<th>Статья дохода/расхода</th>
@@ -97,23 +97,31 @@ _END;
 
 		$userID 	= nameToID($connection,'userID','users','userName',$userName);
 		$accountID 	= nameToID($connection,'accountID','accounts','accountName',$accountName);
-		$now = NOW();
+		//$now = NOW();
 
 		if (isset($_POST['income']))
 		{
 			$inc_exp = $_POST['income'];
 			$incomeID = nameToID($connection,'incomeID','income','incomeName',$inc_exp);
 			$query = "INSERT INTO " . $table .
-				" VALUES ('1','$userID','$accountID','$incomeID','$value','$date',NULL,'$comment',$now)";
+				" VALUES ('1','$userID','$accountID','$incomeID','$value','$date',NULL,'$comment',now())";
 		}
-		if (isset($_POST['expenditure']))
+		elseif (isset($_POST['expenditure']))
 		{
 			$inc_exp = $_POST['expenditure'];
 			$expendID = nameToID($connection,'expendID','expenditure','expendName',$inc_exp);
 			$query = "INSERT INTO " . $table .
-				" VALUES ('0','$userID','$accountID','$expendID','$value','$date',NULL,'$comment',$now)";
+				" VALUES ('-1','$userID','$accountID','$expendID','$value','$date',NULL,'$comment',now())";
 			$value = - $value;
 		}
+		elseif (isset($_POST['accountIn']))
+		{
+			$inc_exp = $_POST['expenditure'];
+			$expendID = nameToID($connection,'expendID','expenditure','expendName',$inc_exp);
+			$query = "INSERT INTO " . $table .
+				" VALUES ('0','$userID','$accountID','$expendID','$value','$date',NULL,'$comment',now())";
+		}
+
 		tableAddDel($connection,$query,$header,$cols,$table);
 
 		$query = "SELECT amount FROM accounts WHERE accountID = '$accountID'";
@@ -171,21 +179,26 @@ _END;
 			$row = $result->fetch_array(MYSQLI_NUM);
 
 			echo "<tr>";
+			echo "<td>$row[0]</td>";
 
 			IDtoName($connection,'userName','users','userID',$row,1);
-
 			IDtoName($connection,'accountName','accounts','accountID',$row,2);
 
 			if ($row[0] == 1)
 			{
 				IDtoName($connection,'incomeName','income','incomeID',$row,3);
-				echo "<td class='incomeValue'>$row[4]</td>";
+				echo "<td class='incomeValue'>+$row[4]</td>";
 			}
-			else
+			elseif ($row[0] == -1)
 			{
 				IDtoName($connection,'expendName','expenditure','expendID',$row,3);
-				$row[4] = -$row[4];
-				echo "<td class='expendValue'>$row[4]</td>";
+				echo "<td class='expendValue'>-$row[4]</td>";
+			}
+			elseif ($row[0] == 0)
+			{
+				IDtoName($connection,'expendName','expenditure','expendID',$row,3);
+				$row[4] = $row[4];
+				echo "<td class='Value'>$row[4]</td>";
 			}
 
 			for ($i = 5 ; $i < $cols ; $i++)
