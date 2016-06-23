@@ -71,7 +71,7 @@ _END;
 					<th>123</th>
 					<th>Пользователь</th>
 					<th>Счет</th>
-					<th>Статья дохода/расхода</th>
+					<th>Статья дохода/расхода/счет зачисления</th>
 					<th>Сумма</th>
 					<th>Дата</th>
 					<th>ID операции</th>
@@ -116,7 +116,7 @@ _END;
 		}
 		elseif (isset($_POST['accountIn']))
 		{
-			$inc_exp = $_POST['expenditure'];
+			$inc_exp = $_POST['accountIn'];
 			$expendID = nameToID($connection,'expendID','expenditure','expendName',$inc_exp);
 			$query = "INSERT INTO " . $table .
 				" VALUES ('0','$userID','$accountID','$expendID','$value','$date',NULL,'$comment',now())";
