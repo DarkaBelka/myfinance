@@ -10,9 +10,7 @@
 		<body>
 _END;
 
-	require_once 'loginDB.php';
-	require_once 'funcTableAddDel.php';
-	require_once 'funcNameID.php';	
+	require_once 'funcFile.php';	
 
 	$connection = new mysqli($dbHostname,$dbUsername,$dbPassword,$dbDatabase);
 
@@ -24,54 +22,41 @@ _END;
 		<a href="accountsAddDel.php"> Добавить/удалить счет</a>
 		<a href="incomeAddDel.php"> Добавить/удалить источник дохода</a>
 		<a href="expenditureAddDel.php"> Добавить/удалить статью расхода</a>
-
-		<div class='tableAddDel'>
-		<form action="main.php" method="post">
-			Выберите тип операции: <br>
+		Выберите тип операции: <br>
 _END;
-		echo "<div class='inc_exp'>";
-			echo "Доходы";
-			$query = "SELECT incomeName FROM income";
-			selectSmth($connection,$query,'income','Источник дохода');
-		echo "</div>";
 
-		echo "<div class='inc_exp'>";
-			echo "Расходы";
-			$query = "SELECT expendName FROM expenditure";
-			selectSmth($connection,$query,'expenditure','Статья расхода');
-		echo "</div>";
+	$formTitle = 'Доходы';
+	$table = 'income';
+	$columnName = 'incomeName';
+	$nameSelect = 'income';
+	$titleSelect = 'Источник дахода';
+	$commentSelect1 = 'Выберите источник дохода';
+	$commentSelect2 = 'Выберите название счета';
+	mainForm($connection,$formTitle,$table,$columnName,$nameSelect,$titleSelect,$commentSelect1,$commentSelect2);
 
-		echo "<div class='inc_exp'>";
-			echo "Перевод";
-			$query = "SELECT accountName FROM accounts";
-			selectSmth($connection,$query,'accountIn','Счет зачисления');
-		echo "</div><br>";
+	$formTitle = 'Расходы';
+	$table = 'expenditure';
+	$columnName = 'expendName';
+	$nameSelect = 'expenditure';
+	$titleSelect = 'Статья расхода';
+	$commentSelect1 = 'Выберите статью расхода';
+	$commentSelect2 = 'Выберите название счета';
+	mainForm($connection,$formTitle,$table,$columnName,$nameSelect,$titleSelect,$commentSelect1,$commentSelect2);
 
-	echo "Выберите имя пользователя:";
-	$query = "SELECT userName FROM users";
-	selectSmth($connection,$query,'userName','Имя пользователя');
-	echo "<br>";
-
-	echo "Выберите название счета:";
-	$query = "SELECT accountName FROM accounts";
-	selectSmth($connection,$query,'accountName','Счет');
-	echo "<br>";
-
-	echo <<<_END
-			Введите сумму: <input type="text" name="value" placeholder="0.00"><br>
-			Ввведите дату: <input type="date" name="date"><br>
-			Введите комментарий: <br>
-			<textarea name="comment" cols="30" rows="10" wrap='soft'>Вводите комментарий к операции (не обязательно).</textarea><br>
-			<input type="submit" value="Добавить"><br>
-		</form>
-		</div>
-_END;
+	$formTitle = 'Перевод между счетами';
+	$table = 'accounts';
+	$columnName = 'accountName';
+	$nameSelect = 'accountIn';
+	$titleSelect = 'Счет';
+	$commentSelect1 = 'Выберите счет списания';
+	$commentSelect2 = 'Выберите счет внесения';
+	mainForm($connection,$formTitle,$table,$columnName,$nameSelect,$titleSelect,$commentSelect1,$commentSelect2);
 
 	$header = " <tr>
-					<th>123</th>
+					<th>Тип операции</th>
 					<th>Пользователь</th>
-					<th>Счет</th>
-					<th>Статья дохода/расхода</th>
+					<th>Источник средств</th>
+					<th>Цель</th>
 					<th>Сумма</th>
 					<th>Дата</th>
 					<th>ID операции</th>
@@ -142,73 +127,6 @@ _END;
 	else
 	{
 		tableTransactionsShow($connection,$table,$header,$cols);
-	}
-
-	function selectSmth($connection,$query,$name,$title)
-	{
-		$result = $connection->query($query);
-
-		if (!$result) echo "Сбой при доступе к базе данных: $query<br>" . $connection->error . "<br><br>";
-
-		$rows = $result->num_rows;
-		echo "<select size='1' name=" .
-			$name . ">";
-		echo "<option disabled selected>$title</option>";
-		for ($j = 0 ; $j < $rows ; ++$j)
-		{
-			$result->data_seek($j);
-			$row = $result->fetch_array(MYSQLI_NUM);
-			echo "<option value='$row[0]'>$row[0]</option>";
-		}
-		echo "</select>";
-	}
-
-	function tableTransactionsShow($connection,$table,$header,$cols)
-	{
-		$query = "SELECT * FROM " . $table;
-		$result = $connection->query($query);
-
-		if (!$result) echo "Сбой при доступе к базе данных: $query<br>" . $connection->error . "<br><br>";
-
-		$rows = $result->num_rows;
-		echo "<table> $header";
-
-		for ($j = 0 ; $j < $rows ; ++$j)
-		{
-			$result->data_seek($j);
-			$row = $result->fetch_array(MYSQLI_NUM);
-
-			echo "<tr>";
-			echo "<td>$row[0]</td>";
-
-			IDtoName($connection,'userName','users','userID',$row,1);
-			IDtoName($connection,'accountName','accounts','accountID',$row,2);
-
-			if ($row[0] == 1)
-			{
-				IDtoName($connection,'incomeName','income','incomeID',$row,3);
-				echo "<td class='incomeValue'>+$row[4]</td>";
-			}
-			elseif ($row[0] == -1)
-			{
-				IDtoName($connection,'expendName','expenditure','expendID',$row,3);
-				echo "<td class='expendValue'>-$row[4]</td>";
-			}
-			elseif ($row[0] == 0)
-			{
-				IDtoName($connection,'expendName','expenditure','expendID',$row,3);
-				$row[4] = $row[4];
-				echo "<td class='Value'>$row[4]</td>";
-			}
-
-			for ($i = 5 ; $i < $cols ; $i++)
-			{
-				echo "<td>$row[$i]</td>";
-			}
-
-			echo "</tr>";
-		}
-		echo "</table>";
 	}
 
 	echo "</body></html>";

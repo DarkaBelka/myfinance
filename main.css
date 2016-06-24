@@ -10,6 +10,11 @@
 	margin: 5px;
 }
 
+.mainForm
+{
+	display: inline-block;
+}
+
 .inc_exp
 {
 	display: inline-block;
