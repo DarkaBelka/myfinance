@@ -46,7 +46,7 @@ _END;
 	$formTitle = 'Перевод между счетами';
 	$table = 'accounts';
 	$columnName = 'accountName';
-	$nameSelect = 'accountIn';
+	$nameSelect = 'accountFrom';
 	$titleSelect = 'Счет';
 	$commentSelect1 = 'Выберите счет списания';
 	$commentSelect2 = 'Выберите счет внесения';
