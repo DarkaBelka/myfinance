@@ -10,10 +10,7 @@
 		<body>
 _END;
 
-	require_once 'loginDB.php';
-	require_once 'funcTableAddDel.php';
-	require_once 'funcTableShow.php';
-	require_once 'funcNameID.php';
+	require_once 'funcFile.php';
 
 	$connection = new mysqli($dbHostname,$dbUsername,$dbPassword,$dbDatabase);
 
@@ -85,34 +82,6 @@ _END;
 	else
 	{
 		tableAccountsShow($connection,$table,$header,$cols);
-	}
-
-	function tableAccountsShow($connection,$table,$header,$cols)
-	{
-		$query = "SELECT * FROM " . $table;
-		$result = $connection->query($query);
-
-		if (!$result) echo "Сбой при доступе к базе данных: $query<br>" . $connection->error . "<br><br>";
-
-		$rows = $result->num_rows;
-		echo "<table> $header";
-
-		for ($j = 0 ; $j < $rows ; ++$j)
-		{
-			$result->data_seek($j);
-			$row = $result->fetch_array(MYSQLI_NUM);
-
-			echo "<tr>";
-			for ($i = 0 ; $i < $cols-1 ; $i++)
-			{
-				echo "<td>$row[$i]</td>";
-			}
-
-			IDtoName($connection,'userName','users','userID',$row,$i);
-
-			echo "</tr>";
-		}
-		echo "</table>";
 	}
 
 	echo "</body></html>";

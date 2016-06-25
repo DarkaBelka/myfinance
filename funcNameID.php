@@ -15,9 +15,7 @@
 
 		if (!$resultID) echo "Сбой при доступе к базе данных: $queryID<br>" . $connection->error . "<br><br>";
 		$rowsID = $resultID->num_rows;
-		$userNameID = $resultID->fetch_array(MYSQLI_NUM);
-		$row[$i] = $userNameID[0];
-
-		echo "<td>$row[$i]</td>";
+		$nameID = $resultID->fetch_array(MYSQLI_NUM);
+		return $nameID[0];
 	}
 ?>

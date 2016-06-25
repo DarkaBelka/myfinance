@@ -66,30 +66,29 @@ _END;
 	$cols = 9;
 	$table = 'transactions';
 
-	if (
-		(isset($_POST['income']) || isset($_POST['expenditure'])) &&
+	if ((isset($_POST['income']) || isset($_POST['expenditure']) || isset($_POST['accountFrom'])) &&
 		isset($_POST['userName']) &&
 		isset($_POST['accountName']) &&
 		isset($_POST['value']) &&
 		isset($_POST['date'])
 		)
 	{
-		$userName 			= $_POST['userName'];
 		$accountName 		= $_POST['accountName'];
+		$userName 			= $_POST['userName'];
 		$value 				= $_POST['value'];
 		$date 				= $_POST['date'];
 		$comment 			= $_POST['comment'];
 
 		$userID 	= nameToID($connection,'userID','users','userName',$userName);
 		$accountID 	= nameToID($connection,'accountID','accounts','accountName',$accountName);
-		//$now = NOW();
 
 		if (isset($_POST['income']))
 		{
 			$inc_exp = $_POST['income'];
 			$incomeID = nameToID($connection,'incomeID','income','incomeName',$inc_exp);
 			$query = "INSERT INTO " . $table .
-				" VALUES ('1','$userID','$accountID','$incomeID','$value','$date',NULL,'$comment',now())";
+				" VALUES ('1','$userID','$incomeID','$accountID','$value','$date',NULL,'$comment',now())";
+			amountUpdate($connection,$accountID,$value);
 		}
 		elseif (isset($_POST['expenditure']))
 		{
@@ -97,31 +96,21 @@ _END;
 			$expendID = nameToID($connection,'expendID','expenditure','expendName',$inc_exp);
 			$query = "INSERT INTO " . $table .
 				" VALUES ('-1','$userID','$accountID','$expendID','$value','$date',NULL,'$comment',now())";
-			$value = - $value;
+			//$value = - $value;
+			amountUpdate($connection,$accountID,-$value);
 		}
-		elseif (isset($_POST['accountIn']))
+		elseif (isset($_POST['accountFrom']))
 		{
-			$inc_exp = $_POST['expenditure'];
-			$expendID = nameToID($connection,'expendID','expenditure','expendName',$inc_exp);
+			$inc_exp = $_POST['accountFrom'];
+			$accountFromID = nameToID($connection,'accountID','accounts','accountName',$inc_exp);
 			$query = "INSERT INTO " . $table .
-				" VALUES ('0','$userID','$accountID','$expendID','$value','$date',NULL,'$comment',now())";
+				" VALUES ('0','$userID','$accountFromID','$accountID','$value','$date',NULL,'$comment',now())";
+			amountUpdate($connection,$accountID,$value);
+			//$value = - $value;
+			amountUpdate($connection,$accountFromID,-$value);
 		}
 
 		tableAddDel($connection,$query,$header,$cols,$table);
-
-		$query = "SELECT amount FROM accounts WHERE accountID = '$accountID'";
-		$result = $connection->query($query);
-
-		if (!$result) echo "Сбой при доступе к базе данных: $query<br>" . $connection->error . "<br><br>";
-
-		$row = $result->fetch_array(MYSQLI_NUM);
-		$amount = $row[0] + $value;
-
-		$query = "UPDATE accounts SET amount = '$amount' WHERE accountID = '$accountID'";
-		$result = $connection->query($query);
-
-		if (!$result) echo "Сбой при доступе к базе данных: $query<br>" . $connection->error . "<br><br>";
-
 		tableTransactionsShow($connection,$table,$header,$cols);
 	}
 	else
