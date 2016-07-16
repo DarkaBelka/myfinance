@@ -1,4 +1,15 @@
 ﻿<?php
+/**
+ **	Отрисовка формы для ввода на главной странице
+ **	@param	$connection		подключение к БД
+ **	@param	$formTitle		заголовок формы, соответсвует проводимой операции
+ ** @param	$table			имя таблицы для составления первого выпадающего списка, соответсвует проводимой операции
+ ** @param	$columnName		имя столбца из $table для составления выпадающего списка
+ ** @param	$nameSelect 	имя поля для первого выпадающего списка
+ ** @param	$titleSelect	заголовок первого выпадающего списка
+ ** @param	$commentSelect1	комментарий перед первым выпадающим списком
+ ** @param	$commentSelect2	комментарий перед вторым выпадающим списком
+ **/
 function mainForm($connection,$formTitle,$table,$columnName,$nameSelect,$titleSelect,$commentSelect1,$commentSelect2)
 {
 	echo <<<_END

@@ -1,4 +1,10 @@
 ﻿<?php
+/** 
+ **	Меняет сумму на счету после операций доход/расход/перевод между счетами
+ **	@param	$connection	подключение к БД 
+ **	@param	$accountID	ID счета, на котором меняется сумма
+ **	@param	$value		сумма зачисляемая на счет, с учетом знака
+ **/
 function amountUpdate($connection,$accountID,$value)
 {
 	$query = "SELECT amount FROM accounts WHERE accountID = '$accountID'";

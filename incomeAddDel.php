@@ -1,4 +1,7 @@
 ﻿<?php
+/**
+ ** Позволяет добавлять/удалять источники дохода
+ **/
 	echo <<<_END
 		<!DOCTYPE html>
 		<html>
@@ -10,12 +13,9 @@
 		<body>
 _END;
 
-	require_once 'loginDB.php';
-	require_once 'funcTableAddDel.php';
-	require_once 'funcTableShow.php';
+	require_once 'funcFile.php';
 
 	$connection = new mysqli($dbHostname,$dbUsername,$dbPassword,$dbDatabase);
-
 	if ($connection -> connect_error) die($connection -> connect_error);
 
 	echo <<<_END
@@ -46,17 +46,17 @@ _END;
 	$cols = 2;
 	$table = 'income';
 
-	if (isset($_POST['incomeNameAdd']))
+	if ( isset($_POST['incomeNameAdd']) )
 	{
 		$name = $_POST['incomeNameAdd'];
-		$query = "INSERT INTO " . $table . " VALUES ('$name',NULL)";
+		$query = "INSERT INTO $table  VALUES ('$name',NULL)";
 		tableAddDel($connection,$query,$header,$cols,$table);
 		tableShow($connection,$table,$header,$cols);
 	}
-	elseif (isset($_POST['incomeNameDel']))
+	elseif ( isset($_POST['incomeNameDel']) )
 	{
 		$name = $_POST['incomeNameDel'];
-		$query = "DELETE FROM " . $table . " WHERE incomeName='$name'";
+		$query = "DELETE FROM $table WHERE incomeName='$name'";
 		tableAddDel($connection,$query,$header,$cols,$table);
 		tableShow($connection,$table,$header,$cols);
 	}

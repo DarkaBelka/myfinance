@@ -1,5 +1,10 @@
 ﻿<?php
-function tableTransactionsShow($connection,$table,$header,$cols)
+/** Выводит таблицу операций
+ **	@param	$connection	подключение к БД
+ **	@param	$table		таблица операций
+ **	@param	$header		заголовок таблицы
+ **	@param	$cols		количество полей в таблице
+ **/leTransactionsShow($connection,$table,$header,$cols)
 {
 	$query = "SELECT * FROM " . $table;
 	$result = $connection->query($query);

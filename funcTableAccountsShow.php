@@ -1,4 +1,10 @@
 ﻿<?php
+/** Выводит таблицу счетов
+ **	@param	$connection	подключение к БД
+ **	@param	$table		таблица счетов
+ **	@param	$header		заголовок таблицы
+ **	@param	$cols		количество полей в таблице
+ **/
 function tableAccountsShow($connection,$table,$header,$cols)
 {
 	$query = "SELECT * FROM " . $table;

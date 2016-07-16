@@ -1,4 +1,8 @@
 ﻿<?php
+/**
+ ** Главная страница.
+ ** Позволяет добавлять финансовые операции: доходы, расходы, передод средств между счетами.
+ **/
 	echo <<<_END
 		<!DOCTYPE html>
 		<html>
@@ -10,10 +14,9 @@
 		<body>
 _END;
 
-	require_once 'funcFile.php';	
+	require_once 'funcFile.php';
 
 	$connection = new mysqli($dbHostname,$dbUsername,$dbPassword,$dbDatabase);
-
 	if ($connection -> connect_error) die($connection -> connect_error);
 
 	echo <<<_END
@@ -29,7 +32,7 @@ _END;
 	$table = 'income';
 	$columnName = 'incomeName';
 	$nameSelect = 'income';
-	$titleSelect = 'Источник дахода';
+	$titleSelect = 'Источник дохода';
 	$commentSelect1 = 'Выберите источник дохода';
 	$commentSelect2 = 'Выберите название счета';
 	mainForm($connection,$formTitle,$table,$columnName,$nameSelect,$titleSelect,$commentSelect1,$commentSelect2);
@@ -66,7 +69,8 @@ _END;
 	$cols = 9;
 	$table = 'transactions';
 
-	if ((isset($_POST['income']) || isset($_POST['expenditure']) || isset($_POST['accountFrom'])) &&
+	if (
+		(isset($_POST['income']) || isset($_POST['expenditure']) || isset($_POST['accountFrom'])) &&
 		isset($_POST['userName']) &&
 		isset($_POST['accountName']) &&
 		isset($_POST['value']) &&
@@ -79,38 +83,56 @@ _END;
 		$date 				= $_POST['date'];
 		$comment 			= $_POST['comment'];
 
-		$userID 	= nameToID($connection,'userID','users','userName',$userName);
-		$accountID 	= nameToID($connection,'accountID','accounts','accountName',$accountName);
+		//Функции для связи имени и ID, позволяет связывать между собой таблицы БД
+		$ID = 'userID';
+		$tableForNameToID = 'users';
+		$columnName = 'userName';
+		$userID 	= nameToID($connection,$ID,$tableForNameToID,$columnName,$userName);
+		$ID = 'accountID';
+		$tableForNameToID = 'accounts';
+		$columnName = 'accountName';
+		$accountID 	= nameToID($connection,$ID,$tableForNameToID,$columnName,$accountName);
 
-		if (isset($_POST['income']))
+		//Выбор варианта операции
+		if ( isset($_POST['income']) ) //доход
 		{
 			$inc_exp = $_POST['income'];
-			$incomeID = nameToID($connection,'incomeID','income','incomeName',$inc_exp);
-			$query = "INSERT INTO " . $table .
-				" VALUES ('1','$userID','$incomeID','$accountID','$value','$date',NULL,'$comment',now())";
-			amountUpdate($connection,$accountID,$value);
+			$ID = 'incomeID';
+			$tableForNameToID = 'income';
+			$columnName = 'incomeName';
+			$incomeID = nameToID($connection,$ID,$tableForNameToID,$columnName,$inc_exp);
+			$query = "INSERT INTO $table
+				VALUES ('1','$userID','$incomeID','$accountID','$value','$date',NULL,'$comment',now())";
+			amountUpdate($connection,$accountID,$value); //Изменение суммы на счету после оепрации
 		}
-		elseif (isset($_POST['expenditure']))
+		elseif ( isset($_POST['expenditure']) ) //Расход
 		{
+			echo '12345';
 			$inc_exp = $_POST['expenditure'];
-			$expendID = nameToID($connection,'expendID','expenditure','expendName',$inc_exp);
-			$query = "INSERT INTO " . $table .
-				" VALUES ('-1','$userID','$accountID','$expendID','$value','$date',NULL,'$comment',now())";
-			//$value = - $value;
+			$ID = 'expendID';
+			$tableForNameToID = 'expenditure';
+			$columnName = 'expendName';
+			$expendID = nameToID($connection,$ID,$tableForNameToID,$columnName,$inc_exp);
+			$query = "INSERT INTO $table
+				VALUES ('-1','$userID','$accountID','$expendID','$value','$date',NULL,'$comment',now())";
 			amountUpdate($connection,$accountID,-$value);
 		}
-		elseif (isset($_POST['accountFrom']))
+		elseif ( isset($_POST['accountFrom']) ) //Перевод
 		{
 			$inc_exp = $_POST['accountFrom'];
-			$accountFromID = nameToID($connection,'accountID','accounts','accountName',$inc_exp);
-			$query = "INSERT INTO " . $table .
-				" VALUES ('0','$userID','$accountFromID','$accountID','$value','$date',NULL,'$comment',now())";
+			$ID = 'accountID';
+			$tableForNameToID = 'accounts';
+			$columnName = 'accountName';
+			$accountFromID = nameToID($connection,$ID,$tableForNameToID,$columnName,$inc_exp);
+			$query = "INSERT INTO $table
+				VALUES ('0','$userID','$accountFromID','$accountID','$value','$date',NULL,'$comment',now())";
 			amountUpdate($connection,$accountID,$value);
-			//$value = - $value;
 			amountUpdate($connection,$accountFromID,-$value);
 		}
 
+		//Добавление строк в таблицу
 		tableAddDel($connection,$query,$header,$cols,$table);
+		//Отрисовка таблицы
 		tableTransactionsShow($connection,$table,$header,$cols);
 	}
 	else

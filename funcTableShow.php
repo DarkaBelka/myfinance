@@ -1,4 +1,10 @@
 ﻿<?php
+/** Выводит таблицу
+ **	@param	$connection	подключение к БД
+ **	@param	$table		имя таблицы
+ **	@param	$header		заголовок таблицы
+ **	@param	$cols		количество полей в таблице
+ **/
 function tableShow($connection,$table,$header,$cols)
 {
 	$query = "SELECT * FROM " . $table;

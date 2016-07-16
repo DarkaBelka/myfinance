@@ -1,4 +1,7 @@
 ﻿<?php
+/**
+ ** Позволяет добавлять/удалять счета
+ **/
 	echo <<<_END
 		<!DOCTYPE html>
 		<html>
@@ -13,16 +16,17 @@ _END;
 	require_once 'funcFile.php';
 
 	$connection = new mysqli($dbHostname,$dbUsername,$dbPassword,$dbDatabase);
-
 	if ($connection -> connect_error) die($connection -> connect_error);
 
 	echo <<<_END
+		//меню-новигатор
 		<a href="main.php"> Главная</a>
 		<a href="usersAddDel.php"> Добавить/удалить пользователя</a>
 		<a href="accountsAddDel.php"> Добавить/удалить счет</a>
 		<a href="incomeAddDel.php"> Добавить/удалить источник дохода</a>
 		<a href="expenditureAddDel.php"> Добавить/удалить статью расхода</a>
 
+		//форма удалить/добавить
 		<div class='tableAddDel'>
 		<form action='accountsAddDel.php' method='post'>
 			Счета.
@@ -55,7 +59,8 @@ _END;
 	$cols = 5;
 	$table = 'accounts';
 
-	if (isset($_POST['accountNameAdd']) &&
+	if (
+		isset($_POST['accountNameAdd']) &&
 		isset($_POST['currency']) &&
 		isset($_POST['amount']) &&
 		isset($_POST['userName'])
@@ -66,16 +71,19 @@ _END;
 		$amount = $_POST['amount'];
 		$userName = $_POST['userName'];
 
-		$userID = nameToID($connection,'userID','users','userName',$userName);
+		$ID = 'userID';
+		$tableForNameToID = 'users';
+		$columnName = 'userName';
+		$userID = nameToID($connection,$ID,$tableForNameToID,$columnName,$userName);
 
-		$query = "INSERT INTO " . $table . " VALUES ('$accountName',NULL,'$currency','$amount','$userID')";
+		$query = "INSERT INTO $table VALUES ('$accountName',NULL,'$currency','$amount','$userID')";
 		tableAddDel($connection,$query,$header,$cols,$table);
 		tableShow($connection,$table,$header,$cols);
 	}
-	elseif (isset($_POST['accountNameDel']))
+	elseif ( isset($_POST['accountNameDel']) )
 	{
 		$name = $_POST['accountNameDel'];
-		$query = "DELETE FROM " . $table . " WHERE accountName='$name'";
+		$query = "DELETE FROM $table WHERE accountName='$name'";
 		tableAddDel($connection,$query,$header,$cols,$table);
 		tableAccountsShow($connection,$table,$header,$cols);
 	}

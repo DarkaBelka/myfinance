@@ -1,4 +1,11 @@
 ﻿<?php
+/**
+ **	Формирует выпадающий список из данных с одного из полей заданной таблицы
+ **	@param	$connection		подключение к БД
+ **	@param	$query			!!!ЯТП какой-то запрос, который, наверное, считывает всю таблицу ПЕРЕДЕЛАТЬ!!!
+ **	@param	$nameSelect		имя полявыпадающего списка
+ **	@param	$titleSelect	заголовок выпадающего спискаа
+ **/
 function selectSmth($connection,$query,$nameSelect,$titleSelect)
 {
 	$result = $connection->query($query);

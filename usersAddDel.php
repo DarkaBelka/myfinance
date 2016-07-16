@@ -1,4 +1,7 @@
 ﻿<?php
+/**
+ ** Позволяет добавлять/удалять пользователей
+ **/
 	echo <<<_END
 		<!DOCTYPE html>
 		<html>
@@ -10,12 +13,9 @@
 		<body>
 _END;
 
-	require_once 'loginDB.php';
-	require_once 'funcTableAddDel.php';
-	require_once 'funcTableShow.php';
+	require_once 'funcFile.php';
 
 	$connection = new mysqli($dbHostname,$dbUsername,$dbPassword,$dbDatabase);
-
 	if ($connection -> connect_error) die($connection -> connect_error);
 
 	echo <<<_END
@@ -25,6 +25,7 @@ _END;
 		<a href="incomeAddDel.php"> Добавить/удалить источник дохода</a>
 		<a href="expenditureAddDel.php"> Добавить/удалить статью расхода</a>
 
+		//форма добавить/удалить
 		<div class='tableAddDel'>
 		<form action="usersAddDel.php" method="post">
 			Пользователи.<br>
@@ -46,23 +47,25 @@ _END;
 	$cols = 2;
 	$table = 'users';
 
+	//добавить
 	if (isset($_POST['userNameAdd']))
 	{
 		$name = $_POST['userNameAdd'];
-		$query = "INSERT INTO " . $table . " VALUES ('$name',NULL)";
-		tableAddDel($connection,$query,$header,$cols,$table);
-		tableShow($connection,$table,$header,$cols);
+		$query = "INSERT INTO $table VALUES ('$name',NULL)";
+		tableAddDel($connection,$query,$header,$cols,$table); //функция вставки/удаления строки
+		tableShow($connection,$table,$header,$cols); //отрисовка таблицы
 	}
-	elseif (isset($_POST['userNameDel']))
+	//удалить
+	elseif ( isset($_POST['userNameDel']) )
 	{
 		$name = $_POST['userNameDel'];
-		$query = "DELETE FROM " . $table . " WHERE userName='$name'";
-		tableAddDel($connection,$query,$header,$cols,$table);
-		tableShow($connection,$table,$header,$cols);
+		$query = "DELETE FROM $table WHERE userName='$name'";
+		tableAddDel($connection,$query,$header,$cols,$table); //функция вставки/удаления строки
+		tableShow($connection,$table,$header,$cols); //отрисовка таблицы
 	}
 	else
 	{
-		tableShow($connection,$table,$header,$cols);
+		tableShow($connection,$table,$header,$cols); //отрисовка таблицы
 	}
 
 	echo "</body></html>";
