@@ -2,14 +2,12 @@
 /**
  **	Формирует выпадающий список из данных с одного из полей заданной таблицы
  **	@param	$connection		подключение к БД
- **	@param	$name			имя столбца, из записей которого составляется список
- ** @param	$table			имя таблицы, в которой содержится столбец
- **	@param	$nameSelect		имя поля выпадающего списка
+ **	@param	$query			!!!ЯТП какой-то запрос, который, наверное, считывает всю таблицу ПЕРЕДЕЛАТЬ!!!
+ **	@param	$nameSelect		имя полявыпадающего списка
  **	@param	$titleSelect	заголовок выпадающего спискаа
  **/
-function selectSmth($connection,$name,$table,$nameSelect,$titleSelect)
+function selectSmth($connection,$query,$nameSelect,$titleSelect)
 {
-	$query = "SELECT $name FROM $table";
 	$result = $connection->query($query);
 
 	if (!$result) echo "Сбой при доступе к базе данных: $query<br>" . $connection->error . "<br><br>";

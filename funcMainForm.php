@@ -19,26 +19,17 @@ function mainForm($connection,$formTitle,$table,$columnName,$nameSelect,$titleSe
 			<div class='inc_exp'>
 				$commentSelect1
 _END;
-				selectSmth($connection,$columnName,$table,$nameSelect,$titleSelect);
+				$query = "SELECT $columnName FROM $table";
+				selectSmth($connection,$query,$nameSelect,$titleSelect);
 				echo "<br>";
-
 				echo $commentSelect2;
-				$name = 'accountName';
-				$table = 'accounts';
-				$nameSelect = 'accountName';
-				$titleSelect = 'Счет';
-				selectSmth($connection,$name,$table,$nameSelect,$titleSelect);
-
+				$query = "SELECT accountName FROM accounts";
+				selectSmth($connection,$query,'accountName','Счет');
 			echo "</div><br>";
 
 			echo "Выберите имя пользователя:";
-			$name = 'userName';
-			$table = 'users';
-			$nameSelect = 'userName';
-			$titleSelect = 'Имя пользователя';
-			selectSmth($connection,$name,$table,$nameSelect,$titleSelect);
-			//$query = "SELECT userName FROM users";
-			//selectSmth($connection,$query,'userName','Имя пользователя');
+			$query = "SELECT userName FROM users";
+			selectSmth($connection,$query,'userName','Имя пользователя');
 			echo "<br>";
 
 	echo <<<_END

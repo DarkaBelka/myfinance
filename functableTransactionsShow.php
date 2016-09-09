@@ -4,8 +4,7 @@
  **	@param	$table		таблица операций
  **	@param	$header		заголовок таблицы
  **	@param	$cols		количество полей в таблице
- **/
-function tableTransactionsShow($connection,$table,$header,$cols)
+ **/leTransactionsShow($connection,$table,$header,$cols)
 {
 	$query = "SELECT * FROM " . $table;
 	$result = $connection->query($query);
