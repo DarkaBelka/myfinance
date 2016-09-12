@@ -30,7 +30,6 @@
 	{
 		$queryID = "SELECT $name FROM $table WHERE $ID=$row[$i]";
 		$resultID = $connection->query($queryID);
-
 		if (!$resultID) echo "Сбой при доступе к базе данных: $queryID<br>" . $connection->error . "<br><br>";
 		$rowsID = $resultID->num_rows;
 		$nameID = $resultID->fetch_array(MYSQLI_NUM);

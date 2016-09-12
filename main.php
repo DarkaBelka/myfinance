@@ -1,32 +1,28 @@
-﻿<?php
-/**
+﻿<!DOCTYPE html>
+<!--
  ** Главная страница.
  ** Позволяет добавлять финансовые операции: доходы, расходы, передод средств между счетами.
- **/
-	echo <<<_END
-		<!DOCTYPE html>
-		<html>
-		<head>
-			<meta charset="UTF-8">
-			<link rel="stylesheet" type="text/css" href="main.css" media="all">
-			<title>Финансовый калькулятор</title>
-		</head>
-		<body>
-_END;
+ -->
 
+<html>
+<head>
+	<meta charset="UTF-8">
+	<link rel="stylesheet" type="text/css" href="main.css" media="all">
+	<title>Финансовый калькулятор</title>
+</head>
+<body>
+	<a href="main.php"> Главная</a>
+	<a href="usersAddDel.php"> Добавить/удалить пользователя</a>
+	<a href="accountsAddDel.php"> Добавить/удалить счет</a>
+	<a href="incomeAddDel.php"> Добавить/удалить источник дохода</a>
+	<a href="expenditureAddDel.php"> Добавить/удалить статью расхода</a>
+	<br>Выберите тип операции: <br>
+
+<?php
 	require_once 'funcFile.php';
 
 	$connection = new mysqli($dbHostname,$dbUsername,$dbPassword,$dbDatabase);
 	if ($connection -> connect_error) die($connection -> connect_error);
-
-	echo <<<_END
-		<a href="main.php"> Главная</a>
-		<a href="usersAddDel.php"> Добавить/удалить пользователя</a>
-		<a href="accountsAddDel.php"> Добавить/удалить счет</a>
-		<a href="incomeAddDel.php"> Добавить/удалить источник дохода</a>
-		<a href="expenditureAddDel.php"> Добавить/удалить статью расхода</a>
-		Выберите тип операции: <br>
-_END;
 
 	$formTitle = 'Доходы';
 	$table = 'income';
@@ -107,7 +103,6 @@ _END;
 		}
 		elseif ( isset($_POST['expenditure']) ) //Расход
 		{
-			echo '12345';
 			$inc_exp = $_POST['expenditure'];
 			$ID = 'expendID';
 			$tableForNameToID = 'expenditure';
@@ -140,7 +135,6 @@ _END;
 		tableTransactionsShow($connection,$table,$header,$cols);
 	}
 
-	echo "</body></html>";
-
 	$connection->close();
 ?>
+</body></html>

@@ -1,54 +1,48 @@
-﻿<?php
-/**
+﻿<!DOCTYPE html>
+<!--
  ** Позволяет добавлять/удалять счета
- **/
-	echo <<<_END
-		<!DOCTYPE html>
-		<html>
-		<head>
-			<meta charset="UTF-8">
-			<link rel="stylesheet" type="text/css" href="main.css" media="all">
-			<title>Добавить/удалить пользователя</title>
-		</head>
-		<body>
-_END;
+ -->
+<html>
+<head>
+	<meta charset="UTF-8">
+	<link rel="stylesheet" type="text/css" href="main.css" media="all">
+	<title>Добавить/удалить пользователя</title>
+</head>
+<body>
+	<a href="main.php"> Главная</a>
+	<a href="usersAddDel.php"> Добавить/удалить пользователя</a>
+	<a href="accountsAddDel.php"> Добавить/удалить счет</a>
+	<a href="incomeAddDel.php"> Добавить/удалить источник дохода</a>
+	<a href="expenditureAddDel.php"> Добавить/удалить статью расхода</a>
 
+	<div class='tableAddDel'>
+	<form action='accountsAddDel.php' method='post'>
+		Счета.<br>
+		Добавить счет:<br>
+		Введите название счета: <input type='text' name='accountNameAdd' placeholder='Название счета'><br>
+		Выберите валюту счета:
+		<select size='1' name='currency'>
+			<option selected='selected' value='RUR'>RUR</option>
+			<option value='USD'>USD</option>
+			<option value='EUR'>EUR</option>
+		</select><br>
+		Введите стартовую сумму на счете: <input type='text' name='amount' placeholder='0.00'><br>
+		Введите имя владельца счета: <input type='text' name='userName' placeholder='Имя пользоватедя'><br>
+		<input type='submit' value='Добавить'><br>
+	</form>
+	<form action='accountsAddDel.php' method='post'>
+		Удалить счет:<br>
+		Введите название счета: <input type="text" name="accountNameDel" placeholder="Название счета"><br>
+		<input type="submit" value="Удалить"><br>
+	</form>
+	</div>
+
+<?php
 	require_once 'funcFile.php';
 
 	$connection = new mysqli($dbHostname,$dbUsername,$dbPassword,$dbDatabase);
 	if ($connection -> connect_error) die($connection -> connect_error);
 
-	echo <<<_END
-		//меню-новигатор
-		<a href="main.php"> Главная</a>
-		<a href="usersAddDel.php"> Добавить/удалить пользователя</a>
-		<a href="accountsAddDel.php"> Добавить/удалить счет</a>
-		<a href="incomeAddDel.php"> Добавить/удалить источник дохода</a>
-		<a href="expenditureAddDel.php"> Добавить/удалить статью расхода</a>
-
-		//форма удалить/добавить
-		<div class='tableAddDel'>
-		<form action='accountsAddDel.php' method='post'>
-			Счета.
-			Добавить счет:<br>
-			Введите название счета: <input type='text' name='accountNameAdd' placeholder='Название счета'><br>
-			Выберите валюту счета:
-			<select size='1' name='currency'>
-				<option selected='selected' value='RUR'>RUR</option>
-				<option value='USD'>USD</option>
-				<option value='EUR'>EUR</option>
-			</select><br>
-			Введите стартовую сумму на счете: <input type='text' name='amount' placeholder='0.00'><br>
-			Введите имя владельца счета: <input type='text' name='userName' placeholder='Имя пользоватедя'><br>
-			<input type='submit' value='Добавить'><br>
-		</form>
-		<form action='accountsAddDel.php' method='post'>
-			Удалить счет:<br>
-			Введите название счета: <input type="text" name="accountNameDel" placeholder="Название счета"><br>
-			<input type="submit" value="Удалить"><br>
-		</form>
-		</div>
-_END;
 	$header = " <tr>
 					<th>Название счета</th>
 					<th>ID счета</th>
@@ -91,6 +85,5 @@ _END;
 	{
 		tableAccountsShow($connection,$table,$header,$cols);
 	}
-
-	echo "</body></html>";
 ?>
+</body></html>
