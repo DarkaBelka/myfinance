@@ -24,8 +24,19 @@
 	</form>
 	<form action="incomeAddDel.php" method="post">
 		Удалить источники доходов:<br>
-		Введите источник доходов: <input type="text" name="incomeNameDel" placeholder="Источник дохода"><br>
-		<input type="submit" value="Удалить"><br>
+		Выберете источник доходов: 
+
+		<?php
+			require_once 'funcFile.php';
+
+			$connection = new mysqli($dbHostname,$dbUsername,$dbPassword,$dbDatabase);
+			if ($connection -> connect_error) die($connection -> connect_error);
+
+			$query = "SELECT incomeName FROM income";
+			selectSmth($connection,$query,'incomeName','Источик дохода');
+		?>
+
+		<br><input type="submit" value="Удалить"><br>
 	</form>
 	</div>
 

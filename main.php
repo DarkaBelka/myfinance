@@ -125,8 +125,6 @@
 			amountUpdate($connection,$accountFromID,-$value);
 		}
 
-		//Добавление строк в таблицу
-		tableAddDel($connection,$query,$header,$cols,$table);
 		//Отрисовка таблицы
 		tableTransactionsShow($connection,$table,$header,$cols);
 	}

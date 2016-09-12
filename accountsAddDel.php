@@ -32,17 +32,23 @@
 	</form>
 	<form action='accountsAddDel.php' method='post'>
 		Удалить счет:<br>
-		Введите название счета: <input type="text" name="accountNameDel" placeholder="Название счета"><br>
-		<input type="submit" value="Удалить"><br>
+		Выберите название счета: 
+
+		<?php
+			require_once 'funcFile.php';
+
+			$connection = new mysqli($dbHostname,$dbUsername,$dbPassword,$dbDatabase);
+			if ($connection -> connect_error) die($connection -> connect_error);
+
+			$query = "SELECT accountName FROM accounts";
+			selectSmth($connection,$query,'accountName','Счет');
+		?>
+
+		<br><input type="submit" value="Удалить"><br>
 	</form>
 	</div>
 
 <?php
-	require_once 'funcFile.php';
-
-	$connection = new mysqli($dbHostname,$dbUsername,$dbPassword,$dbDatabase);
-	if ($connection -> connect_error) die($connection -> connect_error);
-
 	$header = " <tr>
 					<th>Название счета</th>
 					<th>ID счета</th>

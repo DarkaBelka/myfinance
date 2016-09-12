@@ -25,7 +25,19 @@
 	</form>
 	<form action="usersAddDel.php" method="post">
 		Удалить пользователя:<br>
-		Введите имя: <input type="text" name="userNameDel" placeholder="Имя пользователя"><br>
+		Выберете имя: 
+
+		<?php
+			require_once 'funcFile.php';
+
+			$connection = new mysqli($dbHostname,$dbUsername,$dbPassword,$dbDatabase);
+			if ($connection -> connect_error) die($connection -> connect_error);
+
+			$query = "SELECT userName FROM users";
+			selectSmth($connection,$query,'userName','Имя пользоватедя');
+		?>
+
+		<br>
 		<input type="submit" value="Удалить"><br>
 	</form>
 	</div>

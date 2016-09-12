@@ -24,17 +24,23 @@
 	</form>
 	<form action="expenditureAddDel.php" method="post">
 		Удалить статьи расходов:<br>
-		Введите статью расходов: <input type="text" name="expendNameDel" placeholder="Статья расходов"><br>
-		<input type="submit" value="Удалить"><br>
+		Выберете статью расходов: 
+
+		<?php
+			require_once 'funcFile.php';
+
+			$connection = new mysqli($dbHostname,$dbUsername,$dbPassword,$dbDatabase);
+			if ($connection -> connect_error) die($connection -> connect_error);
+
+			$query = "SELECT expendName FROM expenditure";
+			selectSmth($connection,$query,'expendName','Статья расхода');
+		?>
+
+		<br><input type="submit" value="Удалить"><br>
 	</form>
 	</div>
 
 <?php
-	require_once 'funcFile.php';
-
-	$connection = new mysqli($dbHostname,$dbUsername,$dbPassword,$dbDatabase);
-	if ($connection -> connect_error) die($connection -> connect_error);
-
 	$header = "<tr>
 				<th>Статья расхода</th>
 				<th>ID статьи</th>
